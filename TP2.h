@@ -53,7 +53,11 @@ struct tree{
 
 int countOfLinesFromFile(FILE *data);
 void readFile(fileInfo *matches, FILE* data, int fileLines);
+void insert_front(node* le, list* mylist);
+node* partition( list* input, list* left, list* right );
+void qsort_list(list* l);
 list initializeList();
+void calculatePoints(int goals, int enemyGoals, node *p);
 void search(list *l, fileInfo x);
 void addCountry(list *l, char *name, int win, int lose, int draws, int goals, int enemyGoals);
 void first(int fileLines, fileInfo *matches);

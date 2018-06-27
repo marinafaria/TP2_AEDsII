@@ -28,33 +28,75 @@ void readFile(fileInfo *matches, FILE* data, int fileLines){
   }
 }
 
-void quicksort(int vetor[10], int inicio, int fim){
+void insert_front(node* le, list* mylist)
+{
+    if(mylist->first == NULL){
+        le->next = mylist-> first;
+        mylist->first=le;
+        mylist->last=le;
 
-   int pivo, aux, i, j, meio;
+    }
+    else {
+        le->next = mylist-> first;
+        mylist->first= le;
 
-   i = inicio;
-   j = fim;
+    }
 
-   meio = (int) ((i + j) / 2);
-   pivo = vetor[meio];
-
-   do{
-      while (vetor[i] < pivo) i = i + 1;
-      while (vetor[j] > pivo) j = j - 1;
-
-      if(i <= j){
-         aux = vetor[i];
-         vetor[i] = vetor[j];
-         vetor[j] = aux;
-         i = i + 1;
-         j = j - 1;
-      }
-   }while(j > i);
-
-   if(inicio < j) Quick(vetor, inicio, j);
-   if(i < fim) Quick(vetor, i, fim);
+    // printf("%s %d \n",le->passwort, &le->haufigkeit);
 
 }
+
+node* partition( list* input, list* left, list* right ){
+    node* pivot= input->first;
+    node *i;
+    for(i=input->first; i != NULL; i=i->next){
+
+        if ((i -> country.points) < (pivot -> country.points)){
+            insert_front( i, left);
+        }
+        else{
+            insert_front( i, right);
+        }
+
+    }
+
+    return pivot;
+}
+
+void qsort_list(list* l){
+    list right;
+    list left;
+    right.first=NULL;
+    right.last=NULL;
+    left.first=NULL;
+    left.last=NULL;
+    node*pivot;
+    if (l->last != l->first){
+        pivot = partition(l, &left, &right );
+
+        qsort_list(&left);
+        qsort_list(&right);
+        if(left.first == NULL) {
+                  // Special
+
+                  left.first = pivot;
+                  l->first = left.first;
+              } else {
+                  // REGULAR
+                  l->first = left.first;
+                  left.last->next = pivot;
+              }
+              if(right.first == NULL) {
+                  // Special
+                  pivot->next = right.first;
+                  l->last = pivot;
+              } else {
+                  // Regular
+                  pivot->next = right.first;
+                  l->last = right.last;
+              }
+          }
+      }
 
 list initializeList(){
   list l;
@@ -166,13 +208,14 @@ void first(int fileLines, fileInfo *matches){
             //printf("%d\n", k);
       search(&l, matches[k]);
     // fazer função pra calcular pontos
-    node *p;
-    p = (node*)malloc(sizeof(node));
-    p = l.first;
-    while(p != NULL){
-      printf("%s %.2f %.2f %d %d %d %d %d\n", p->country.name, p->country.points, p->country.games, p->country.wins, p->country.draws, p->country.defeats, p->country.goals, p->country.enemyGoals);
-      p = p->next;
-    }
+  }
+  //qsort_list(&l);
+  node *p;
+  p = (node*)malloc(sizeof(node));
+  p = l.first;
+  while(p != NULL){
+    printf("%s %.2f %.2f %d %d %d %d %d\n", p->country.name, p->country.points, p->country.games, p->country.wins, p->country.draws, p->country.defeats, p->country.goals, p->country.enemyGoals);
+    p = p->next;
   }
 }
 
