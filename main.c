@@ -14,6 +14,7 @@ int main(int argc, char *argv[]){
   fileInfo matches[fileLines];
   alocate(matches, fileLines);
   readFile(matches, data, fileLines);
+  first(fileLines);
   tree *raiz = NULL;
   fclose(data);
 }

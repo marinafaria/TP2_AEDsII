@@ -55,37 +55,25 @@ void addRight(list *l, int valor){
   l->size++;
 }
 
-void addLeft(list *l, int valor, node *aux){
-  if (l->first->next == NULL){
-    addRight(l, valor);
-  }else{
-  node *n;
-  n =(node*)malloc(sizeof(no));
-  n->next = aux;
-  n->prev = aux->prev;
-  n->prev->prox = n;
-  aux->prev = n;
-  n->digito = valor;
-  l->tamanho++;
-  }
+void freeList(list *l){
+  node *aux;
+  aux = l->first;
+  while(aux != NULL){
+    aux = l->first;
+    if(aux == NULL)
+    break;
+    l->first = aux->next;
+    free(aux);
+    }
+    printf("to no libera\n");
 }
 
-  void freeList(lista *l){
-    no *aux;
-    aux = l->primeiro;
-    while(aux != NULL){
-      aux = l->primeiro;
-      if(aux == NULL)
-      break;
-      l->primeiro = aux->prox;
-      free(aux);
-      }
-      printf("to no libera\n");
+
+void first(int fileLines){
+  list l = initializeList(); // criar cabeça da lista encadeada
+  for(int k=0; k<fileLines; k++){
+
   }
-
-
-void first(){
-
 }
 
 void second(){

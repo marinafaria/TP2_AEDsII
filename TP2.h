@@ -53,5 +53,6 @@ typedef struct tree{
 int countOfLinesFromFile(FILE *data);
 void alocate(fileInfo *matches, int fileLines);
 void readFile(fileInfo *matches, FILE* data, int fileLines);
+void first(int fileLines);
 
 #endif
