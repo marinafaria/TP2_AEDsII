@@ -10,12 +10,14 @@ int main(int argc, char *argv[]){
   char dataName[20];
   sprintf(dataName,"%s", argv[1]);
   FILE* data = fopen(dataName, "r");
+  if(data == NULL){
+    printf("Um dos arquivos inseridos nao pode ser aberto!");
+  }
   fileLines = countOfLinesFromFile(data);
-  fileInfo matches[fileLines];
-  alocate(matches, fileLines);
+  fileInfo *matches = (fileInfo*)malloc(fileLines * (sizeof(fileInfo)));
   readFile(matches, data, fileLines);
-  first(fileLines);
-  tree *raiz = NULL;
+  first(fileLines, matches);
+  // tree *raiz = NULL;
   fclose(data);
 }
 

@@ -3,7 +3,7 @@
 
 #ifndef TP2_H_INCLUDED
 #define TP2_H_INCLUDED
-#define TAM 50
+#define TAM 100
 
 typedef struct{
 int date;
@@ -26,11 +26,12 @@ typedef struct{
   int defeats;
   int goals;
   int enemyGoals;
-  float aproveitamento;
+  float pointsBalance;
 }countries;
 
 typedef struct node node;
 typedef struct list list;
+typedef struct tree tree;
 
 struct node {
     node *prev;
@@ -44,15 +45,17 @@ struct list {
     int size;
 };
 
-typedef struct tree{
+struct tree{
   countries country;
   tree *right;
   tree *left;
-}tree;
+};
 
 int countOfLinesFromFile(FILE *data);
-void alocate(fileInfo *matches, int fileLines);
 void readFile(fileInfo *matches, FILE* data, int fileLines);
-void first(int fileLines);
+list initializeList();
+void search(list *l, fileInfo x);
+void addCountry(list *l, char *name, int win, int lose, int draws, int goals, int enemyGoals);
+void first(int fileLines, fileInfo *matches);
 
 #endif
