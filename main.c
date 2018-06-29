@@ -9,6 +9,9 @@ int main(int argc, char *argv[]){
   int fileLines;
   char dataName[20];
   sprintf(dataName,"%s", argv[1]);
+  int method = atoi(argv[2]);
+  int yearStart = atoi(argv[3]);
+  int yearEnd = atoi(argv[4]);
   FILE* data = fopen(dataName, "r");
   if(data == NULL){
     printf("Um dos arquivos inseridos nao pode ser aberto!");
@@ -16,7 +19,9 @@ int main(int argc, char *argv[]){
   fileLines = countOfLinesFromFile(data);
   fileInfo *matches = (fileInfo*)malloc(fileLines * (sizeof(fileInfo)));
   readFile(matches, data, fileLines);
-  first(fileLines, matches);
+  if(method ==1){
+    first(fileLines, matches, yearStart, yearEnd);
+  }
   // tree *raiz = NULL;
   fclose(data);
 }
@@ -31,4 +36,7 @@ int main(int argc, char *argv[]){
 //pra sair, quit
 
 //saber se deu free em tudo
-//valgrind --leak-check=full --track-origins=yes ./tp2 results.csv
+//valgrind --leak-check=full --track-origins=yes ./tp2 results.
+
+//fontes
+//https://www.vivaolinux.com.br/script/Ordenacao-QuickSort

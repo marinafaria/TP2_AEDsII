@@ -11,7 +11,7 @@ int countOfLinesFromFile(FILE *data){
       if(ch == '\n')
           number_of_lines++;
   }
-      return (number_of_lines - 1);
+      return (number_of_lines);
 }
 
 void readFile(fileInfo *matches, FILE* data, int fileLines){
@@ -28,75 +28,82 @@ void readFile(fileInfo *matches, FILE* data, int fileLines){
   }
 }
 
-void insert_front(node* le, list* mylist)
-{
-    if(mylist->first == NULL){
-        le->next = mylist-> first;
-        mylist->first=le;
-        mylist->last=le;
-
+int tieBreaker(countries country1, countries country2, char *type){
+  if (strcmp(type, "ranking") == 0){
+    if(country1.points < country2.points){
+      return -1;
     }
-    else {
-        le->next = mylist-> first;
-        mylist->first= le;
-
-    }
-
-    // printf("%s %d \n",le->passwort, &le->haufigkeit);
-
-}
-
-node* partition( list* input, list* left, list* right ){
-    node* pivot= input->first;
-    node *i;
-    for(i=input->first; i != NULL; i=i->next){
-
-        if ((i -> country.points) < (pivot -> country.points)){
-            insert_front( i, left);
-        }
-        else{
-            insert_front( i, right);
-        }
-
-    }
-
-    return pivot;
-}
-
-void qsort_list(list* l){
-    list right;
-    list left;
-    right.first=NULL;
-    right.last=NULL;
-    left.first=NULL;
-    left.last=NULL;
-    node*pivot;
-    if (l->last != l->first){
-        pivot = partition(l, &left, &right );
-
-        qsort_list(&left);
-        qsort_list(&right);
-        if(left.first == NULL) {
-                  // Special
-
-                  left.first = pivot;
-                  l->first = left.first;
-              } else {
-                  // REGULAR
-                  l->first = left.first;
-                  left.last->next = pivot;
-              }
-              if(right.first == NULL) {
-                  // Special
-                  pivot->next = right.first;
-                  l->last = pivot;
-              } else {
-                  // Regular
-                  pivot->next = right.first;
-                  l->last = right.last;
-              }
-          }
+    else if(country1.points > country2.points){
+      return 1;
+    }else{
+      if(country1.pointsBalance < country2.pointsBalance){
+        return -1;
       }
+      else if(country1.pointsBalance > country2.pointsBalance){
+        return 1;
+      }else{
+        if(country1.goalsDifference < country2.goalsDifference){
+          return -1;
+        }
+        else if(country1.goalsDifference > country2.goalsDifference){
+          return 1;
+        }else{
+          if(country1.goals < country2.goals){
+            return -1;
+          }
+          else if(country1.goals > country2.goals){
+            return 1;
+          }else{
+            if(strcmp(country1.name, country2.name) > 0){
+              return -1;
+            }
+            else if(strcmp(country1.name, country2.name) < 0){
+              return 1;
+            }
+          }
+        }
+      }
+      return 0;
+    }
+  }
+  if (strcmp(type, "confrontations") ==0){
+    if(country1.games < country2.games){
+      return -1;
+    }
+    else if(country1.games > country2.games){
+      return 1;
+    }
+  }
+  return 0;
+}
+void quicksort(countries *a, int left, int right, char *type) {
+    int i, j;
+    countries y;
+    countries x;
+    i = left;
+    j = right;
+    x = a[(left + right) / 2];
+
+    while(i <= j) {
+        while (tieBreaker(x, a[i], type) < 0) i++;
+        while (tieBreaker(x, a[j], type) > 0) j--;
+        if(i <= j) {
+            y = a[i];
+            a[i] = a[j];
+            a[j] = y;
+            i++;
+            j--;
+        }
+    }
+
+    if(j > left) {
+        quicksort(a, left, j, type);
+    }
+    if(i < right) {
+        quicksort(a, i, right, type);
+    }
+  }
+
 
 list initializeList(){
   list l;
@@ -107,7 +114,18 @@ list initializeList(){
   l.size = 0;
   l.first->next = NULL;
   l.last->next = NULL;
-  n->prev = NULL;
+  return l;
+}
+
+listConfrontations initializelistConfrontations(){
+  listConfrontations l;
+  nodeConfrontations *n;
+  n = (nodeConfrontations*)malloc(sizeof(nodeConfrontations));
+  l.first = n;
+  l.last = n;
+  l.size = 0;
+  l.first->next = NULL;
+  l.last->next = NULL;
   return l;
 }
 
@@ -126,66 +144,66 @@ void calculatePoints(int goals, int enemyGoals, node *p){
     p->country.draws += 1;
     p->country.points += 1;
   }
-
 }
 
-//pontos, número de jogos, vitórias, empates, derrotas, gols marcados,
-//gols sofridos, saldo de gols e aproveitamento (este último com duas casas decimais)
-
-void search(list *l, fileInfo x){
-  node *p;
-  int win, lose, draws;
-  char name[100];
-  //printf("%s\n", x.team1);
-  p = (node*)malloc(sizeof(node));
-  p = l->first;
-  while(p != NULL){
-    //printf("%s %s\n", p->country.name, x.team1);
-      if(strcmp(p->country.name,x.team1) == 0){
-        calculatePoints(x.goalsTeam1, x.goalsTeam2, p);
-        break;
-      }else{
-        //printf("%s\n", p->country.name);
-        p = p->next;
-      }
-  }
-  if(p == NULL) {
-    strcpy(name, x.team1);
-    //printf("eu adicionei %s na lista\n", x.team1);
-    if(x.goalsTeam1 > x.goalsTeam2){
-      win = 1;
-      lose = 0;
-      draws = 0;
-    }
-    if(x.goalsTeam1 < x.goalsTeam2){
-      win = 0;
-      lose = 1;
-      draws = 0;
-    }
-    if(x.goalsTeam1 == x.goalsTeam2){
-      win = 0;
-      lose = 0;
-      draws = 0;
-    }
-    addCountry(l, name, win, lose, draws, x.goalsTeam1, x.goalsTeam2);
-  }
-}
-
-void addCountry(list *l, char *name, int win, int lose, int draws, int goals, int enemyGoals){
+void addCountry(list *l, char *name, int goals, int enemyGoals){
   node *n;
   n = (node*)malloc(sizeof(node));
   n->next = NULL;
-  n->prev = l->last;
   l->last->next = n;
   l->last = n;
   l->size++;
-  n->country.games = 1;
   strcpy(n->country.name, name);
-  n->country.wins = win;
-  n->country.defeats = lose;
-  n->country.draws = draws;
   calculatePoints(goals, enemyGoals, n);
-  //printf("%s\n", n->country.name);
+}
+
+void addCountryConfrontations(listConfrontations *l, char *name){
+  nodeConfrontations *n;
+  n = (nodeConfrontations*)malloc(sizeof(nodeConfrontations));
+  n->next = NULL;
+  l->last->next = n;
+  l->last = n;
+  l->size++;
+  n->confrontationsList. games = 1;
+  strcpy(n->confrontationsList.teams, name);
+}
+
+void search(list *l, int goals, int enemyGoals, char *name, char *championship){
+  node *p;
+  if (strcmp(championship, "FIFA World Cup") == 0) {
+    p = (node*)malloc(sizeof(node));
+    p = l->first->next;
+    while(p != NULL){
+      //printf("%s %s\n", p->country.name, x.team1);
+        if(strcmp(p->country.name, name) == 0){
+          calculatePoints(goals, enemyGoals, p);
+          break;
+        }else{
+          //printf("%s\n", p->country.name);
+          p = p->next;
+        }
+    }
+    if(p == NULL) {
+      addCountry(l, name, goals, enemyGoals);
+    }
+  }
+}
+
+void searchConfrontations(listConfrontations *lConfrontations, char *name){
+  nodeConfrontations *p;
+    p = (nodeConfrontations*)malloc(sizeof(nodeConfrontations));
+    p = lConfrontations->first;
+    while(p != NULL){
+        if(strcmp(p->confrontationsList.teams, name) == 0){
+          p->confrontationsList.games +=1;
+          break;
+        }else{
+          p = p->next;
+        }
+    if(p == NULL) {
+      addCountryConfrontations(lConfrontations, name);
+    }
+  }
 }
 
 // void freeList(list *l){
@@ -202,20 +220,72 @@ void addCountry(list *l, char *name, int win, int lose, int draws, int goals, in
 // }
 
 
-void first(int fileLines, fileInfo *matches){
+void first(int fileLines, fileInfo *matches, int yearStart, int yearEnd){
   list l = initializeList(); // criar cabeça da lista encadeada
+  char type [20];
   for(int k=0; k<fileLines -1 ; k++){
-            //printf("%d\n", k);
-      search(&l, matches[k]);
-    // fazer função pra calcular pontos
+    if( matches[k].date > yearStart*10000 && matches[k].date < yearEnd*10000){
+      search(&l, matches[k].goalsTeam1, matches[k].goalsTeam2, matches[k].team1, matches[k].championship);
+      search(&l, matches[k].goalsTeam2, matches[k].goalsTeam1, matches[k].team2, matches[k].championship);
+    }
   }
-  //qsort_list(&l);
+  countries *vector = (countries*)malloc(l.size * (sizeof(countries)));
   node *p;
   p = (node*)malloc(sizeof(node));
-  p = l.first;
+  p = l.first->next;
+  int i = 0;
   while(p != NULL){
-    printf("%s %.2f %.2f %d %d %d %d %d\n", p->country.name, p->country.points, p->country.games, p->country.wins, p->country.draws, p->country.defeats, p->country.goals, p->country.enemyGoals);
+    vector[i].pointsBalance = (100 * p->country.points)/(3 * p->country.games);
+    vector[i].goalsDifference = (p->country.goals - p->country.enemyGoals);
+    vector[i].goals = p->country.goals;
+    strcpy(vector[i].name, p->country.name);
+    vector[i].points = p->country.points;
+    vector[i].games = p->country.games;
+    vector[i].wins = p->country.wins;
+    vector[i].draws = p->country.draws;
+    vector[i].defeats = p->country.defeats;
+    vector[i].enemyGoals = p->country.enemyGoals;
     p = p->next;
+    i++;
+  }
+  strcpy(type, "ranking");
+  quicksort(vector, 0, l.size -1, type);
+  for(int q = 0; q < l.size; q++)
+  {
+    printf("%s %.2f %.2f %d %d %d %d %d %d %.2f%%\n", vector[q].name, vector[q].points, vector[q].games, vector[q].wins, vector[q].draws,
+    vector[q].defeats, vector[q].goals, vector[q].enemyGoals, vector[q].goalsDifference, vector[q].pointsBalance);
+  }
+
+
+//confrontos
+  listConfrontations lConfrontations = initializelistConfrontations();
+  countries *vectorConfrontations = (countries*)malloc(l.size * (sizeof(countries)));
+  for(int k=0; k<fileLines -1 ; k++){
+    if(matches[k].date > yearStart*10000 && matches[k].date < yearEnd*10000){
+      if(strcmp(matches[k].team1,matches[k].team2) > 0){
+        strcat(matches[k].team2, ",");
+        strcat(matches[k].team2, matches[k].team1);
+      }else{
+        strcat(matches[k].team1, ",");
+        strcat(matches[k].team1, matches[k].team2);
+      }
+      searchConfrontations(&lConfrontations, matches[k].team1);
+    }
+  }
+  nodeConfrontations *pconfrontations;
+  pconfrontations = (nodeConfrontations*)malloc(sizeof(nodeConfrontations));
+  pconfrontations = lConfrontations.first->next;
+  int m = 0;
+  while(pconfrontations != NULL){
+    strcpy(vectorConfrontations[m].name, pconfrontations->confrontationsList.teams);
+    vectorConfrontations[m].games = pconfrontations->confrontationsList.games;
+    pconfrontations = pconfrontations->next;
+    m++;
+  }
+  strcpy(type, "confrontations");
+  quicksort(vectorConfrontations, 0, lConfrontations.size -1, type);
+  for(int q = 0; q < lConfrontations.size; q++){
+    printf("%s %.0f\n", vectorConfrontations[q].name, vectorConfrontations[q].games);
   }
 }
 
