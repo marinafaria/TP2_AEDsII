@@ -5,19 +5,19 @@
 #define TP2_H_INCLUDED
 #define TAM 100
 
-typedef struct{
-int date;
-char team1[TAM];
-char team2[TAM];
-int goalsTeam1;
-int goalsTeam2;
-char championship[TAM];
-char city[TAM];
-char country[TAM];
-char neutral[TAM];
-}fileInfo;
+typedef struct {
+  int date;
+  char team1[TAM];
+  char team2[TAM];
+  int goalsTeam1;
+  int goalsTeam2;
+  char championship[TAM];
+  char city[TAM];
+  char country[TAM];
+  char neutral[TAM];
+} fileInfo;
 
-typedef struct{
+typedef struct {
   char name[TAM];
   float points;
   float games;
@@ -28,7 +28,7 @@ typedef struct{
   int enemyGoals;
   int goalsDifference;
   float pointsBalance; // variável que armazena o aproveitamento. Não achei tradução melhor, desculpe!
-}countries;
+} countries;
 
 typedef struct node node;
 typedef struct list list;
@@ -38,15 +38,15 @@ typedef struct nodeConfrontations nodeConfrontations;
 typedef struct listConfrontations listConfrontations;
 
 struct node {
-    node *prev;
-    node *next;
-    countries country;
+  node *prev;
+  node *next;
+  countries country;
 };
 
 struct list {
-    node *first;
-    node *last;
-    int size;
+  node *first;
+  node *last;
+  int size;
 };
 
 struct confrontation{
@@ -55,15 +55,15 @@ struct confrontation{
 };
 
 struct nodeConfrontations {
-    nodeConfrontations *prev;
-    nodeConfrontations *next;
-    confrontation confrontationsList;
+  nodeConfrontations *prev;
+  nodeConfrontations *next;
+  confrontation confrontationsList;
 };
 
 struct listConfrontations {
-    nodeConfrontations *first;
-    nodeConfrontations *last;
-    int size;
+  nodeConfrontations *first;
+  nodeConfrontations *last;
+  int size;
 };
 
 struct tree{

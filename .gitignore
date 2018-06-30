@@ -51,4 +51,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Other files
+*.pdf
+
 \.~lock\.results\.csv#
