@@ -163,21 +163,20 @@ void addCountryConfrontations(listConfrontations *l, char *name) {
 void search(list *l, int goals, int enemyGoals, char *name, char *championship) {
   node *p;
   if(strcmp(championship, "FIFA World Cup") == 0) {
-  p = (node*)malloc(sizeof(node));
-  p = l->first->next;
-  while(p != NULL) {
-    //printf("%s %s\n", p->country.name, x.team1);
+    p = (node*)malloc(sizeof(node));
+    p = l->first->next;
+    while(p != NULL) {
       if(strcmp(p->country.name, name) == 0) {
         calculatePoints(goals, enemyGoals, p);
         break;
       }
       else {
-        //printf("%s\n", p->country.name);
         p = p->next;
       }
-  }
-  if(p == NULL) {
-    addCountry(l, name, goals, enemyGoals);
+    }
+    if(p == NULL) {
+      addCountry(l, name, goals, enemyGoals);
+    }
   }
 }
 
@@ -187,31 +186,31 @@ void searchConfrontations(listConfrontations *lConfrontations, char *name){
     p = (nodeConfrontations*)malloc(sizeof(nodeConfrontations));
     p = lConfrontations->first;
     while(p != NULL) {
-        if(strcmp(p->confrontationsList.teams, name) == 0) {
-          p->confrontationsList.games += 1;
-          break;
-        }
-        else {
-          p = p->next;
-        }
+      if(strcmp(p->confrontationsList.teams, name) == 0) {
+        p->confrontationsList.games += 1;
+        break;
+      }
+      else {
+        p = p->next;
+      }
+    }
     if(p == NULL) {
       addCountryConfrontations(lConfrontations, name);
     }
-  }
 }
 
-// void freeList(list *l){
-//   node *aux;
-//   aux = l->first;
-//   while(aux != NULL){
-//     aux = l->first;
-//     if(aux == NULL)
-//       break;
-//     l->first = aux->next;
-//     free(aux);
-//     }
-//   printf("to no libera\n");
-// }
+void freeList(list *l){
+  node *aux;
+  aux = l->first;
+  while(aux != NULL){
+    aux = l->first;
+    if(aux == NULL)
+      break;
+    l->first = aux->next;
+    free(aux);
+    }
+  printf("to no libera\n");
+}
 
 
 void first(int fileLines, fileInfo *matches, int yearStart, int yearEnd) {
@@ -245,23 +244,23 @@ void first(int fileLines, fileInfo *matches, int yearStart, int yearEnd) {
   strcpy(type, "ranking");
   quicksort(vector, 0, l.size -1, type);
   for(int q = 0; q < l.size; q++) {
-    printf("%s %.2f %.2f %d %d %d %d %d %d %.2f\n", vector[q].name, vector[q].points, vector[q].games, vector[q].wins, vector[q].draws,
-    vector[q].defeats, vector[q].goals, vector[q].enemyGoals, vector[q].goalsDifference, vector[q].pointsBalance);
+    //printf("%s %.2f %.2f %d %d %d %d %d %d %.2f\n", vector[q].name, vector[q].points, vector[q].games, vector[q].wins, vector[q].draws,
+    //vector[q].defeats, vector[q].goals, vector[q].enemyGoals, vector[q].goalsDifference, vector[q].pointsBalance);
   }
 
 //confrontos
   listConfrontations lConfrontations = initializelistConfrontations();
   countries *vectorConfrontations = (countries*)malloc(l.size * (sizeof(countries)));
+  char aux[100];
   for(int k = 0; k < fileLines - 1 ;k++) {
     if(matches[k].date > yearStart*10000 && matches[k].date < yearEnd*10000) {
       if(strcmp(matches[k].team1,matches[k].team2) > 0) {
-        strcat(matches[k].team2, ",");
-        strcat(matches[k].team2, matches[k].team1);
+        strcpy(aux,matches[k].team1);
+        strcpy(matches[k].team1, matches[k].team2);
+        strcpy(matches[k].team2, aux);
       }
-      else {
         strcat(matches[k].team1, ",");
         strcat(matches[k].team1, matches[k].team2);
-      }
       searchConfrontations(&lConfrontations, matches[k].team1);
     }
   }
@@ -287,4 +286,63 @@ void second() {
 // strcmp comparado escócia, líbia dá -1, porque escócia tá antes da líbia, aí retorna a função recursiva pra
 // ir percorrendo a esquerda ou direita da árvore até achar o seu lugar
 
+}
+
+void Inicializa(TipoDicionario T){
+  int i;
+  for (i = 0; i < M; i++) {
+    strcpy(T[i].Chave, Vazio);
+  }
+}
+
+Apontador Pesquisa(TipoChave Ch, TipoPesos p, TipoDicionario T){
+  unsigned int i = 0;
+  unsigned int Inicial;
+  Inicial = h(Ch, p);
+  while((strcmmp(T[(Inicial + i) % M].Chave, Vazio) != 0) && strcmp(T[(Inicial + i) % M].Chave, Ch) != 0) && (i < M))
+    i++;
+  if(strcmp(T[(Inicial + i) % M].Chave, Vazio) ! = 0) && (strcmp(T[(Inicial + i) % M].Chave, Ch) != 0) && (i < M)
+    return((Inicial + i) % M);
+  else
+    return M;
+}
+
+Apontador Pesquisa(TipoChave Ch, TipoPesos p, TipoDicionario T){
+  unsigned int i = 0;
+  unsigned int Inicial;
+  Inicial = h(Ch, p);
+  while((strcmp(T[(Inicial + i) % M].Chave, Vazio) ! = 0) && strcmp(T[(Inicial + i) % M].Chave), Ch != 0) && (i < M)
+    i++;
+  if(strcmp(T[(Inicial + i) % M].Chave, CH == 0))
+    return ((Inicial + i) % M);
+  else
+    return M;
+  }
+
+void Retira(char Ch, TipoPesos p, TipoDicionario T)‫‏‬{
+  Indice i;
+  i = Pesquisa(Ch, p, T);
+  if (i < M)
+    strcpy(T[i].Chave, Retirado);
+  else
+    printf("Registro nao esta presente\n");
+  }
+
+void Insere(TipoItem x, TipoPesos p, TipoDicionario T)‫‏‬ {
+  unsigned int i = 0;
+  unsigned int Inicial;
+  if (Pesquisa(x.Chave, p, T) < M) {
+    printf("Elemento ja esta presente\n");
+  return;
+  }
+
+  Inicial = h(x.Chave, p);
+  while ((strcmp(T[(Inicial + i) % M].Chave, Vazio) != 0) &&
+  (strcmp(T[(Inicial + i) % M].Chave, Retirado) != 0) &&
+  (i < M))
+  i++;
+  if (i < M){
+    strcpy (T[(Inicial + i) % M].Chave, x.Chave);
+  }
+  else printf(“Tabela cheian");
 }
