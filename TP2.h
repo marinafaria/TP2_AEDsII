@@ -4,10 +4,10 @@
 #ifndef TP2_H_INCLUDED
 #define TP2_H_INCLUDED
 #define TAM 100
-#define Vazio "!!!!!!!!!!"
-#define Retirado "**********"
-#define M 7
-#define nn 11
+// #define Vazio "!!!!!!!!!!"
+// #define Retirado "**********"
+// #define M 7
+// #define nn 11
 
 typedef struct {
   int date;
@@ -76,15 +76,16 @@ struct tree{
   tree *left;
 };
 
-typedef unsigned int Apontador;
-typedef unsigned TipoPesos[nn];
-
-typedef struct {
-char Chave[nn];
-} TipoItem;
-
-typedef unsigned int Indice;
-typedef TipoItem TipoDicionario[M];
+// typedef unsigned int Apontador;
+// typedef char TipoChave[];
+// typedef unsigned TipoPesos[nn];
+//
+// typedef struct {
+//   TipoChave Chave[nn];
+// } TipoItem;
+//
+// typedef unsigned int Indice;
+// typedef TipoItem TipoDicionario[M];
 
 int countOfLinesFromFile(FILE *data);
 void readFile(fileInfo *matches, FILE* data, int fileLines);

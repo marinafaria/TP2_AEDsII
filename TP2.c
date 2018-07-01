@@ -170,45 +170,42 @@ void search(list *l, int goals, int enemyGoals, char *name, char *championship) 
         calculatePoints(goals, enemyGoals, p);
         break;
       }
-      else {
+      else
         p = p->next;
-      }
     }
-    if(p == NULL) {
+    if(p == NULL)
       addCountry(l, name, goals, enemyGoals);
-    }
   }
 }
 
 
 void searchConfrontations(listConfrontations *lConfrontations, char *name){
   nodeConfrontations *p;
-    p = (nodeConfrontations*)malloc(sizeof(nodeConfrontations));
-    p = lConfrontations->first;
-    while(p != NULL) {
-      if(strcmp(p->confrontationsList.teams, name) == 0) {
-        p->confrontationsList.games += 1;
-        break;
-      }
-      else {
-        p = p->next;
-      }
+  p = (nodeConfrontations*)malloc(sizeof(nodeConfrontations));
+  p = lConfrontations->first;
+  while(p != NULL) {
+    if(strcmp(p->confrontationsList.teams, name) == 0) {
+      p->confrontationsList.games += 1;
+      break;
     }
-    if(p == NULL) {
-      addCountryConfrontations(lConfrontations, name);
-    }
+    else
+      p = p->next;
+  }
+  if(p == NULL)
+    addCountryConfrontations(lConfrontations, name);
+}
+
+void deleteNode(list *l) {
+  node* first = l->first;
+  l->first = first->next;
+  free(first);
+  l->size--;
 }
 
 void freeList(list *l){
-  node *aux;
-  aux = l->first;
-  while(aux != NULL){
-    aux = l->first;
-    if(aux == NULL)
-      break;
-    l->first = aux->next;
-    free(aux);
-    }
+  for (int i = 0; i < l->size; i++) {
+    deleteNode(l);
+  }
   printf("to no libera\n");
 }
 
@@ -288,61 +285,46 @@ void second() {
 
 }
 
-void Inicializa(TipoDicionario T){
-  int i;
-  for (i = 0; i < M; i++) {
-    strcpy(T[i].Chave, Vazio);
-  }
-}
-
-Apontador Pesquisa(TipoChave Ch, TipoPesos p, TipoDicionario T){
-  unsigned int i = 0;
-  unsigned int Inicial;
-  Inicial = h(Ch, p);
-  while((strcmmp(T[(Inicial + i) % M].Chave, Vazio) != 0) && strcmp(T[(Inicial + i) % M].Chave, Ch) != 0) && (i < M))
-    i++;
-  if(strcmp(T[(Inicial + i) % M].Chave, Vazio) ! = 0) && (strcmp(T[(Inicial + i) % M].Chave, Ch) != 0) && (i < M)
-    return((Inicial + i) % M);
-  else
-    return M;
-}
-
-Apontador Pesquisa(TipoChave Ch, TipoPesos p, TipoDicionario T){
-  unsigned int i = 0;
-  unsigned int Inicial;
-  Inicial = h(Ch, p);
-  while((strcmp(T[(Inicial + i) % M].Chave, Vazio) ! = 0) && strcmp(T[(Inicial + i) % M].Chave), Ch != 0) && (i < M)
-    i++;
-  if(strcmp(T[(Inicial + i) % M].Chave, CH == 0))
-    return ((Inicial + i) % M);
-  else
-    return M;
-  }
-
-void Retira(char Ch, TipoPesos p, TipoDicionario T)‫‏‬{
-  Indice i;
-  i = Pesquisa(Ch, p, T);
-  if (i < M)
-    strcpy(T[i].Chave, Retirado);
-  else
-    printf("Registro nao esta presente\n");
-  }
-
-void Insere(TipoItem x, TipoPesos p, TipoDicionario T)‫‏‬ {
-  unsigned int i = 0;
-  unsigned int Inicial;
-  if (Pesquisa(x.Chave, p, T) < M) {
-    printf("Elemento ja esta presente\n");
-  return;
-  }
-
-  Inicial = h(x.Chave, p);
-  while ((strcmp(T[(Inicial + i) % M].Chave, Vazio) != 0) &&
-  (strcmp(T[(Inicial + i) % M].Chave, Retirado) != 0) &&
-  (i < M))
-  i++;
-  if (i < M){
-    strcpy (T[(Inicial + i) % M].Chave, x.Chave);
-  }
-  else printf(“Tabela cheian");
-}
+// void Inicializa(TipoDicionario T) {
+//   for (int i = 0; i < M; i++) {
+//     strcpy(T[i].Chave, Vazio);
+//   }
+// }
+//
+// Apontador Pesquisa(TipoChave Ch, TipoPesos p, TipoDicionario T){
+//   unsigned int i = 0;
+//   unsigned int Inicial;
+//   Inicial = h(Ch, p);
+//   while((strcmp(T[(Inicial + i) % M].Chave, Vazio) != 0) && (strcmp(T[(Inicial + i) % M].Chave, Ch) != 0) && (i < M))
+//     i++;
+//   if((strcmp(T[(Inicial + i) % M].Chave, Vazio) != 0) && (strcmp(T[(Inicial + i) % M].Chave, Ch) != 0) && (i < M))
+//     return((Inicial + i) % M);
+//   else
+//     return M;
+// }
+//
+// void Retira(char Ch, TipoPesos p, TipoDicionario T) {
+//   Indice i = Pesquisa(Ch, p, T);
+//   if(i < M)
+//     strcpy(T[i].Chave, Retirado);
+//   else
+//     printf("Registro nao esta presente\n");
+// }
+//
+// void Insere(TipoItem x, TipoPesos p, TipoDicionario T) {
+//   unsigned int i = 0;
+//   unsigned int Inicial = 0;
+//   if(Pesquisa(x.Chave, p, T) < M)
+//     printf("Elemento ja esta presente\n");
+//   else {
+//     Inicial = h(x.Chave, p);
+//     while ((strcmp(T[(Inicial + i) % M].Chave, Vazio) != 0) &&
+//     (strcmp(T[(Inicial + i) % M].Chave, Retirado) != 0) &&
+//     (i < M))
+//       i++;
+//     if (i < M)
+//       strcpy (T[(Inicial + i) % M].Chave, x.Chave);
+//     else
+//       printf("Tabela cheia");
+//   }
+// }
